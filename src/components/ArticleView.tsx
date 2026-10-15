@@ -18,6 +18,9 @@ import {
 } from 'lucide-react';
 import type { Article, ArticlePhoto } from '../types/blog';
 import { calcReadTime, formatDate, categoryToSlug } from '../utils/blog';
+import { getPageSeoData, updateDocumentHead } from '../utils/seo';
+import { SeoClassInspector } from './SeoClassInspector';
+import { OptimizedImage } from './OptimizedImage';
 
 interface ArticleViewProps {
   article: Article;
@@ -40,15 +43,13 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   const [selectedPhoto, setSelectedPhoto] = useState<ArticlePhoto | null>(null);
 
   const readTime = calcReadTime(article.content);
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : `/article/${article.slug}`;
+  const seoData = getPageSeoData(currentPath, article.slug, null, false, article);
 
-  // Dynamically update document title
+  // Synchronize dynamic HTML <head> metadata for search engines and crawlers
   useEffect(() => {
-    const originalTitle = document.title;
-    document.title = `${article.title} — The Daily Overdrive`;
-    return () => {
-      document.title = originalTitle;
-    };
-  }, [article.title]);
+    updateDocumentHead(seoData, article);
+  }, [article, seoData]);
 
   // Track window scroll progress for top meter bar
   useEffect(() => {
@@ -102,7 +103,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
   return (
     <article className="min-h-screen pb-28">
-      {/* Top Tachometer Reading Progress Bar */}
+      {/* 1. Academic SEO Class Project Inspector Bar */}
+      <SeoClassInspector seo={seoData} uniqueUrl={seoData.canonicalUrl} />
+
+      {/* Top Reading Progress Bar */}
       <div className="fixed top-20 left-0 right-0 h-1 bg-transparent z-40 pointer-events-none">
         <div
           className="h-full bg-[#d90429] transition-all duration-150"
@@ -110,22 +114,22 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         />
       </div>
 
-      {/* Header Container - Spacious, Uncluttered, Pure Editorial */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-10">
-        {/* Clean Breadcrumb Navigation */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 text-xs font-semibold text-slate-500 dark:text-slate-400">
+      {/* Header Container */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-10">
+        {/* Clean Breadcrumb Navigation with explicit anchor text */}
+        <nav aria-label="Article Breadcrumb" className="flex flex-wrap items-center justify-between gap-4 mb-8 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <a
             href="/"
             onClick={(e) => handleLinkClick(e, '/')}
             className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-[#d90429] dark:hover:text-[#d90429] transition-colors cursor-pointer group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Return to Journal</span>
+            <span>Return to Journal Feed</span>
           </a>
 
           <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider">
             <a href="/" onClick={(e) => handleLinkClick(e, '/')} className="hover:underline">
-              Journal
+              Journal Home
             </a>
             <span className="text-slate-400">/</span>
             <a
@@ -133,10 +137,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               onClick={(e) => handleLinkClick(e, `/category/${categoryToSlug(article.category)}`)}
               className="text-[#d90429] hover:underline font-bold"
             >
-              {article.category}
+              {article.category} Section
             </a>
           </div>
-        </div>
+        </nav>
 
         {/* Category Pill Tag */}
         <div className="mb-4">
@@ -145,9 +149,18 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           </span>
         </div>
 
-        {/* Title */}
+        {/* Labeled Page Heading (H1) for SEO Class Project */}
+        <div className="mb-2 flex items-center gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-500/40">
+            Page Heading (&lt;h1&gt;)
+          </span>
+          <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
+            Target Keyword: "{article.primaryKeyword}"
+          </span>
+        </div>
+
         <h1 className="text-3xl sm:text-5xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-6">
-          {article.title}
+          {article.h1Heading || article.title}
         </h1>
 
         {/* Subhead / Excerpt */}
@@ -155,7 +168,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           {article.summary}
         </p>
 
-        {/* Professional Metadata & Action Bar - No Writer Name, Zero Clutter */}
+        {/* Professional Metadata & Action Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200 dark:border-[#222631] text-xs font-semibold text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
             <span className="flex items-center gap-1.5 uppercase tracking-wider font-bold text-slate-900 dark:text-white">
@@ -178,10 +191,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             <button
               onClick={handleShare}
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#222631] bg-white dark:bg-[#121620] text-slate-700 dark:text-slate-300 hover:border-[#d90429] dark:hover:border-[#d90429] transition-all cursor-pointer shadow-sm text-xs font-bold"
-              aria-label="Share article"
+              aria-label={`Share ${article.title}`}
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Share2 className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Link Copied' : 'Share'}</span>
+              <span>{copied ? 'Link Copied' : 'Share Article'}</span>
             </button>
 
             <button
@@ -191,28 +204,28 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   ? 'border-[#d90429] bg-[#d90429] text-white shadow-md shadow-red-600/30'
                   : 'border-slate-200 dark:border-[#222631] bg-white dark:bg-[#121620] text-slate-700 dark:text-slate-300 hover:border-slate-400'
               }`}
-              aria-label={isBookmarked ? 'Remove from saved' : 'Save article'}
+              aria-label={isBookmarked ? `Remove ${article.title} from saved articles` : `Save ${article.title} for later`}
             >
               <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
-              <span>{isBookmarked ? 'Saved' : 'Save'}</span>
+              <span>{isBookmarked ? 'Saved' : 'Save Article'}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Primary Car Photograph - Generous Viewport Presence */}
+      {/* Primary Car Photograph - Optimized fast delivery with descriptive alt text */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="relative aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-2xl border border-slate-200 dark:border-[#222631] group">
-          <img
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-2xl border border-slate-200 dark:border-[#222631]">
+          <OptimizedImage
             src={article.image}
-            alt={article.title}
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src =
-                'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80';
-            }}
-            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700 ease-out"
+            alt={article.imageAlt}
+            targetWidth={720}
+            quality={70}
+            priority={true}
+            aspectRatioClass="aspect-[16/9]"
+            fallbackTitle={article.title}
           />
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-4 left-4 z-10 pointer-events-none">
             <span className="inline-flex items-center gap-1.5 bg-[#0b0e14]/90 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg border border-white/10 shadow-lg">
               <Car className="w-3.5 h-3.5 text-[#d90429]" /> Vehicle in Motion
             </span>
@@ -220,7 +233,9 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         </div>
         <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-3 px-1">
           <span>The Daily Overdrive Archive // {article.category}</span>
-          <span className="hidden sm:inline">Fig. 1.0 — Track & Dynamics Profile</span>
+          <span className="font-mono text-emerald-400 dark:text-emerald-400">
+            Alt Text Verified ✓: "{article.imageAlt.slice(0, 50)}..."
+          </span>
         </div>
       </div>
 
@@ -241,10 +256,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                    Mechanical Fittings & Hardware Spotlight
+                    Mechanical Fittings &amp; Hardware Spotlight
                   </h3>
                   <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    Critical engineering tolerance & component teardown
+                    Critical engineering tolerance &amp; component teardown
                   </span>
                 </div>
               </div>
@@ -259,27 +274,27 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   setSelectedPhoto({
                     url: article.fittingsImage,
                     title: 'Mechanical Fitting Detail',
-                    caption: 'High-tolerance engineering component fitted to vehicle platform.',
+                    caption: article.fittingsImageAlt,
                     type: 'fitting',
+                    alt: article.fittingsImageAlt,
                   })
                 }
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-900 cursor-pointer group border border-slate-200 dark:border-[#222631]"
+                className="relative cursor-pointer group"
               >
-                <img
+                <OptimizedImage
                   src={article.fittingsImage}
-                  alt="Mechanical fitting component"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src =
-                      'https://images.unsplash.com/photo-1600793575654-910699b5e4d4?auto=format&fit=crop&w=1200&q=80';
-                  }}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  alt={article.fittingsImageAlt}
+                  targetWidth={500}
+                  quality={70}
+                  aspectRatioClass="aspect-[4/3]"
+                  fallbackTitle="Mechanical Hardware Component"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white rounded-xl">
                   <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider bg-black/75 px-3.5 py-2 rounded-lg backdrop-blur-sm border border-white/20">
                     <ZoomIn className="w-4 h-4 text-[#d90429]" /> Inspect Fitting
                   </span>
                 </div>
-                <div className="absolute bottom-3 left-3">
+                <div className="absolute bottom-3 left-3 pointer-events-none">
                   <span className="inline-flex items-center gap-1.5 bg-[#d90429] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-md">
                     <Wrench className="w-3 h-3" /> Technical Fitting
                   </span>
@@ -288,11 +303,14 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
               <div className="space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 <p className="font-bold text-slate-900 dark:text-white text-base">
-                  Precision Metallurgy & High-Tolerance Assembly
+                  Precision Metallurgy &amp; High-Tolerance Assembly
                 </p>
                 <p>
                   High-performance vehicles demand specialized mechanical fittings calibrated to endure extreme vibrational frequencies, thermal cycles exceeding 800°C, and sustained hydraulic pressure.
                 </p>
+                <div className="text-[11px] font-mono text-emerald-500 dark:text-emerald-400 bg-emerald-950/30 p-2 rounded border border-emerald-500/20">
+                  <strong>Fitting Alt Tag:</strong> "{article.fittingsImageAlt}"
+                </div>
                 <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-semibold">
                   <span className="inline-flex items-center gap-1 bg-white dark:bg-[#0b0e14] px-2.5 py-1 rounded-md border border-slate-200 dark:border-[#222631]">
                     <Check className="w-3.5 h-3.5 text-emerald-500" /> Track-vetted
@@ -312,10 +330,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div>
                 <h3 className="text-xl sm:text-2xl font-black uppercase italic tracking-tight text-slate-900 dark:text-white">
-                  Photography & <span className="text-[#d90429]">Fittings Gallery</span>
+                  Photography &amp; <span className="text-[#d90429]">Fittings Gallery</span>
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  High-resolution car dynamics and detailed mechanical hardware photography.
+                  High-resolution car dynamics and detailed mechanical hardware photography (Optimized lightweight sizes).
                 </p>
               </div>
 
@@ -328,6 +346,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       ? 'bg-[#d90429] text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
+                  aria-label="Show all gallery media"
                 >
                   <Layers className="w-3.5 h-3.5 inline mr-1" /> All ({article.gallery.length})
                 </button>
@@ -338,6 +357,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       ? 'bg-[#d90429] text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
+                  aria-label="Filter gallery to car photos only"
                 >
                   <Car className="w-3.5 h-3.5 inline mr-1" /> Cars
                 </button>
@@ -348,6 +368,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       ? 'bg-[#d90429] text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
+                  aria-label="Filter gallery to mechanical fittings only"
                 >
                   <Wrench className="w-3.5 h-3.5 inline mr-1" /> Fittings
                 </button>
@@ -363,19 +384,15 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   className="group relative flex flex-col bg-white dark:bg-[#121620] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#222631] hover:border-slate-400 dark:hover:border-slate-700 shadow-sm hover:shadow-xl transition-all cursor-pointer"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
-                    <img
+                    <OptimizedImage
                       src={photo.url}
-                      alt={photo.title}
-                      loading="lazy"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          photo.type === 'car'
-                            ? 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80'
-                            : 'https://images.unsplash.com/photo-1600793575654-910699b5e4d4?auto=format&fit=crop&w=1200&q=80';
-                      }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      alt={photo.alt || `${photo.title} - ${photo.caption}`}
+                      targetWidth={480}
+                      quality={70}
+                      aspectRatioClass="aspect-[16/10]"
+                      fallbackTitle={photo.title}
                     />
-                    <div className="absolute top-3 left-3">
+                    <div className="absolute top-3 left-3 pointer-events-none z-10">
                       <span
                         className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-md ${
                           photo.type === 'car'
@@ -403,12 +420,17 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   </div>
 
                   <div className="p-5 flex-1 flex flex-col justify-between">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-[#d90429] transition-colors">
-                      {photo.title}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                      {photo.caption}
-                    </p>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-[#d90429] transition-colors">
+                        {photo.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                        {photo.caption}
+                      </p>
+                    </div>
+                    <span className="mt-2 text-[9px] font-mono text-emerald-400 dark:text-emerald-400 block truncate">
+                      Alt: "{photo.alt}"
+                    </span>
                   </div>
                 </div>
               ))}
@@ -420,28 +442,31 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         {article.tags.length > 0 && (
           <div className="mt-14 pt-8 border-t border-slate-200 dark:border-[#222631]">
             <div className="flex items-center gap-2 mb-3.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-              <Tag className="w-3.5 h-3.5 text-[#d90429]" /> Filed under:
+              <Tag className="w-3.5 h-3.5 text-[#d90429]" /> Filed under topics:
             </div>
             <div className="flex flex-wrap gap-2.5">
               {article.tags.map((tag) => (
-                <span
+                <a
                   key={tag}
-                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-[#121620] border border-slate-200 dark:border-[#222631] text-slate-700 dark:text-slate-300"
+                  href={`/?tag=${tag}`}
+                  onClick={(e) => handleLinkClick(e, `/?tag=${tag}`)}
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-[#121620] hover:bg-red-500/10 border border-slate-200 dark:border-[#222631] text-slate-700 dark:text-slate-300 hover:text-[#d90429] transition-colors"
                 >
-                  #{tag}
-                </span>
+                  Explore #{tag}
+                </a>
               ))}
             </div>
           </div>
         )}
 
-        {/* Previous / Next Article Navigation */}
+        {/* Previous / Next Article Navigation with explicit anchor text */}
         <div className="mt-14 pt-10 border-t border-slate-200 dark:border-[#222631] grid grid-cols-1 sm:grid-cols-2 gap-5">
           {prevArticle ? (
             <a
               href={`/article/${prevArticle.slug}`}
               onClick={(e) => handleLinkClick(e, `/article/${prevArticle.slug}`)}
               className="flex flex-col items-start p-6 rounded-2xl border border-slate-200 dark:border-[#222631] hover:border-[#d90429] dark:hover:border-[#d90429] bg-white dark:bg-[#121620] text-left transition-all cursor-pointer group shadow-sm"
+              aria-label={`Read previous article: ${prevArticle.title}`}
             >
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2 group-hover:text-[#d90429] transition-colors">
                 <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" /> Previous Analysis
@@ -459,6 +484,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               href={`/article/${nextArticle.slug}`}
               onClick={(e) => handleLinkClick(e, `/article/${nextArticle.slug}`)}
               className="flex flex-col items-end p-6 rounded-2xl border border-slate-200 dark:border-[#222631] hover:border-[#d90429] dark:hover:border-[#d90429] bg-white dark:bg-[#121620] text-right transition-all cursor-pointer group shadow-sm"
+              aria-label={`Read next article: ${nextArticle.title}`}
             >
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2 group-hover:text-[#d90429] transition-colors">
                 Next Analysis <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -493,7 +519,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               <button
                 onClick={() => setSelectedPhoto(null)}
                 className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-[#222631] cursor-pointer"
-                aria-label="Close photo inspection"
+                aria-label="Close photo inspection modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -502,13 +528,16 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             <div className="relative aspect-[16/10] bg-black">
               <img
                 src={selectedPhoto.url}
-                alt={selectedPhoto.title}
+                alt={selectedPhoto.alt || selectedPhoto.title}
                 className="w-full h-full object-contain"
               />
             </div>
 
-            <div className="p-4 bg-[#0b0e14] text-xs text-slate-300">
+            <div className="p-4 bg-[#0b0e14] text-xs text-slate-300 flex items-center justify-between gap-4">
               <p>{selectedPhoto.caption}</p>
+              <span className="text-[10px] font-mono text-emerald-400 shrink-0">
+                Alt: "{selectedPhoto.alt || selectedPhoto.title}"
+              </span>
             </div>
           </div>
         </div>

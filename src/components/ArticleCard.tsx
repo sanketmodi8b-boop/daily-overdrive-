@@ -2,6 +2,7 @@ import React from 'react';
 import { Bookmark, Clock, ArrowRight, Calendar } from 'lucide-react';
 import type { Article } from '../types/blog';
 import { calcReadTime, formatDate } from '../utils/blog';
+import { getOptimizedImageUrl } from '../utils/seo';
 
 interface ArticleCardProps {
   article: Article;
@@ -20,6 +21,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 }) => {
   const readTime = calcReadTime(article.content);
   const articleUrl = `/article/${article.slug}`;
+  const optimizedThumb = getOptimizedImageUrl(article.image, 500, 70);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Let browser handle new tab / window shortcuts
@@ -36,15 +38,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           href={articleUrl}
           onClick={handleLinkClick}
           className="block w-full h-full cursor-pointer"
-          aria-label={`Read ${article.title}`}
+          aria-label={`Read full analysis: ${article.title}`}
         >
           <img
-            src={article.image}
-            alt={article.title}
+            src={optimizedThumb}
+            alt={article.imageAlt || `Automotive analysis on ${article.title}`}
             loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src =
-                'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80';
+                'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=500&q=70';
             }}
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
           />
@@ -68,7 +71,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               ? 'bg-[#d90429] text-white shadow-md shadow-red-600/40'
               : 'bg-black/40 hover:bg-black/60 text-white'
           }`}
-          aria-label={isBookmarked ? `Remove ${article.title} from saved` : `Save ${article.title}`}
+          aria-label={isBookmarked ? `Remove ${article.title} from saved articles` : `Save ${article.title} for offline reading`}
         >
           <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
         </button>
@@ -81,18 +84,18 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider mb-3">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-slate-400" />
+                <Calendar className="w-3.5 h-3.5 text-slate-400" />
                 {formatDate(article.date)}
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-slate-400" />
+                <Clock className="w-3.5 h-3.5 text-slate-400" />
                 {readTime} min read
               </span>
             </div>
             {article.gallery?.length > 0 && (
               <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-[#d90429] font-bold">
-                Car & Fittings
+                Car &amp; Fittings
               </span>
             )}
           </div>
@@ -114,14 +117,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           </p>
         </div>
 
-        {/* Footer Link */}
+        {/* Footer Link with explicit anchor text */}
         <div className="pt-4 border-t border-slate-100 dark:border-[#222631]">
           <a
             href={articleUrl}
             onClick={handleLinkClick}
             className="flex items-center justify-between text-xs font-bold text-[#d90429] hover:underline"
+            aria-label={`Read full analysis: ${article.title}`}
           >
-            <span className="uppercase tracking-wider">Read Full Analysis</span>
+            <span className="uppercase tracking-wider">Read Full Technical Analysis</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
           </a>
         </div>

@@ -8,31 +8,43 @@ export const ARTICLES_DATA: Article[] = [
     category: 'News',
     featured: true,
     date: '2026-10-12',
-    image: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Sleek aerodynamic high-voltage electric prototype testing solid-state battery cells on circuit',
+    fittingsImage: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'Solid-state battery management system micro-processor circuitry telemetry board with 800V bus',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=480&q=70',
         title: 'High-Voltage Electric Proving Ground Mule',
         caption: 'Aerodynamic electric prototype undergoing sustained high-voltage thermal and fast-charging circuit runs.',
+        alt: 'High-voltage electric vehicle prototype undergoing aerodynamic circuit testing',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=480&q=70',
         title: 'Solid-State BMS Telemetry Micro-Processor Fitting',
         caption: 'High-frequency battery management telemetry circuitry monitoring atomic cell expansion and voltage across 800V channels.',
+        alt: 'Solid-state battery management system microprocessor circuit fitting',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=480&q=70',
         title: 'CNC Billet Aluminum Battery Subframe Casing',
         caption: 'Structural extruded aluminum lower casing accommodating solid ceramic separator cells without parasitic cooling armor.',
+        alt: 'Precision CNC milled billet aluminum structural battery enclosure frame',
         type: 'fitting',
       },
     ],
     summary:
       'As electric vehicles mature, solid-state cell architecture emerges as the monumental breakthrough for energy density, thermal safety, and 10-minute fast replenishment.',
     tags: ['EV', 'SolidState', 'Powertrain', 'Engineering'],
+    // SEO Class Project Specifications
+    seoTitle: 'Solid-State Batteries: Why EVs Will Charge in 10 Min', // 53 chars (< 60)
+    seoDescription:
+      'Discover how solid-state batteries offer 600-mile EV range and 10-minute fast charging. Read our engineering breakdown to see when mass adoption begins today.', // 159 chars (< 160)
+    h1Heading: 'The Solid-State Battery Revolution: Erasing Range Anxiety',
+    primaryKeyword: 'Solid-State Batteries',
+    clickReason: 'Read our engineering breakdown to see when mass adoption begins today.',
     content: `
       <p class="lead">The automotive industry stands at the threshold of its most consequential powertrain transition in over a century. For more than a decade, conventional lithium-ion chemistry has carried modern electrified transport. While energy densities have steadily climbed, liquid-electrolyte architectures remain physically bounded by strict thermal guardrails, dendrite vulnerability, and cooling mass penalties.</p>
 
@@ -55,31 +67,43 @@ export const ARTICLES_DATA: Article[] = [
     category: 'Exotics',
     featured: true,
     date: '2026-10-09',
-    image: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Low-slung track hypercar cornering with active hydraulic rear wing deployed for maximum downforce',
+    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'High-pressure aircraft-grade hydraulic servo lines and AN fittings for active aerodynamic airbrake',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=480&q=70',
         title: 'Track Silhouette & Downforce Profile',
         caption: 'Low-slung hypercar silhouette utilizing dynamic aerodynamic surfaces to trim drag on straights and maximize cornering suction.',
+        alt: 'White McLaren hypercar profile showcasing active aerodynamic side air channels',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'High-Pressure Hydraulic Aero Lines & Actuators',
         caption: 'Aircraft-grade hydraulic servo linkages, braided lines, and AN fittings pitching active airbrake elements within 150 milliseconds.',
+        alt: 'Hydraulic servo actuator assembly and high-pressure fluid fittings for active spoiler',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=480&q=70',
         title: 'CNC Machined Underbody Aero Flap Stanchions',
         caption: 'Billet alloy hinge assemblies coordinating active underbody diffuser strakes with real-time suspension stroke telemetry.',
+        alt: 'CNC machined underbody aerodynamic flap stanchions and hinges',
         type: 'fitting',
       },
     ],
     summary:
       'Modern hypercars are dynamic kinetic organisms. We break down how microsecond hydraulic actuators and ground-effect strakes morph downforce on the fly.',
     tags: ['Hypercars', 'Aerodynamics', 'Track', 'CarbonFiber'],
+    // SEO Class Project Specifications
+    seoTitle: 'Active Aerodynamics: How 200-MPH Hypercar Wings Grip', // 52 chars (< 60)
+    seoDescription:
+      'Discover how active aerodynamics and hydraulic DRS wings generate cornering downforce. Read our technical breakdown to see how hypercars tame track air today.', // 159 chars (< 160)
+    h1Heading: 'Active Aerodynamics: The Invisible Forces Shaping Hypercars',
+    primaryKeyword: 'Active Aerodynamics',
+    clickReason: 'Read our technical breakdown to see how hypercars tame track air today.',
     content: `
       <p class="lead">Velocity brings an uncompromising adversary: fluid dynamics. Aerodynamic drag scales quadratically with speed—doubling road velocity quadruples resistance. Historically, racing constructors met this challenge with static aerodynamics: massive swan-neck wings, serrated front splitters, and pronounced rear diffusers. Yet static wings inevitably create an unresolvable penalty.</p>
 
@@ -99,31 +123,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'Synthetic Fuels: A Lifeline for the Internal Combustion Engine?',
     category: 'News',
     date: '2026-10-04',
-    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Naturally aspirated endurance GT racing car fueled by zero-emission synthetic e-gasoline',
+    fittingsImage: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'CNC machined direct-injection high-pressure fuel rail and stainless AN fuel fittings',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=480&q=70',
         title: 'Naturally Aspirated GT Endurance Machine',
         caption: 'Naturally aspirated sports car running 100% synthetic e-fuel at sustained high revs during endurance testing.',
+        alt: 'High-performance GT endurance sports car on track testing synthetic fuels',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=480&q=70',
         title: 'Billet Fuel Delivery Manifold & Stainless AN Fittings',
         caption: 'Direct-injection high-pressure rail equipped with Viton seals rated for synthetic methanol-to-gasoline fuels.',
+        alt: 'Precision fuel injection manifold and stainless steel AN fluid fittings',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'High-Compression Valvetrain & Oil Line Assembly',
         caption: 'Titanium valves and high-flow oil lines calibrated for the thermodynamic combustion cycle of synthetic e-gasoline.',
+        alt: 'High-compression racing engine valvetrain and oil line assembly hardware',
         type: 'fitting',
       },
     ],
     summary:
       'Can closed-loop synthetic e-fuels rescue internal combustion from obsolescence? Motorsports pioneers and engineering labs are betting billions on green molecules.',
     tags: ['SyntheticFuels', 'EFuels', 'Powertrain', 'Sustainability'],
+    // SEO Class Project Specifications
+    seoTitle: 'Synthetic e-Fuels: Can Carbon-Neutral Gas Save V8s?', // 51 chars (< 60)
+    seoDescription:
+      'Discover how synthetic e-fuels can save the internal combustion engine with zero fossil carbon. Read our chemical report to see if sports cars will survive.', // 157 chars (< 160)
+    h1Heading: 'Synthetic Fuels: A Lifeline for the Internal Combustion Engine?',
+    primaryKeyword: 'Synthetic e-Fuels',
+    clickReason: 'Read our chemical report to see if sports cars will survive.',
     content: `
       <p class="lead">With legislative timelines advancing toward zero tailpipe emissions, the demise of the reciprocating internal combustion engine seemed all but written. Yet for purists, collectors, and legacy racing categories, electric drive lacks mechanical resonance. In response, a global chemical engineering push has materialized: synthesized carbon-neutral e-fuels.</p>
 
@@ -137,34 +173,46 @@ export const ARTICLES_DATA: Article[] = [
   {
     id: 4,
     slug: 'save-the-manuals-enthusiast-resurgence',
-    title: 'Save the Manuals: The Enthusiast\'s Resurgence',
+    title: "Save the Manuals: The Enthusiast's Resurgence",
     category: 'Culture',
     date: '2026-09-28',
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Rear-wheel-drive sports coupe with tactile 6-speed manual stick shift driving alpine mountain pass',
+    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'Braided stainless hydraulic clutch master cylinder lines and billet pedal box linkage fittings',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
-        title: 'Analog Driver\'s Machine on Alpine Pass',
+        url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=480&q=70',
+        title: "Analog Driver's Machine on Alpine Pass",
         caption: 'Pure rear-wheel-drive sports coupe engineered specifically around a tactile six-speed manual gearbox.',
+        alt: 'Classic analog sports car parked on an open mountain pass road',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'Hydraulic Clutch Master Lines & Actuation Slave',
         caption: 'Braided stainless hydraulic clutch lines and billet pedal box linkages delivering uncompromised tactile pedal pressure.',
+        alt: 'Hydraulic clutch master cylinder lines and stainless fittings',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=480&q=70',
         title: 'Gearbox Linkage Adjustment Hardware',
         caption: 'Precision turnbuckle shift rods, spherical rod ends, and solid bronze bushings eliminating shifter play.',
+        alt: 'Short-throw manual gearbox shift linkage turnbuckles and spherical bushings',
         type: 'fitting',
       },
     ],
     summary:
       'Dual-clutch gearboxes shift faster on track, but the tactile three-pedal manual transmission is staging an unforgettable renaissance among driving purists.',
     tags: ['Culture', 'ManualGearbox', 'DriversCar', 'Vintage'],
+    // SEO Class Project Specifications
+    seoTitle: 'Manual Transmissions: Why 3-Pedal Gearboxes Are Back', // 52 chars (< 60)
+    seoDescription:
+      'Explore why manual transmissions are surging as driving purists demand stick shifts. Read our driver report to see why manual sports cars hold peak value.', // 155 chars (< 160)
+    h1Heading: "Save the Manuals: The Enthusiast's Resurgence",
+    primaryKeyword: 'Manual Transmissions',
+    clickReason: 'Read our driver report to see why manual sports cars hold peak value.',
     content: `
       <p class="lead">Modern dual-clutch transmissions execute gear changes in milliseconds—faster than any human limb could ever depress a clutch pedal and select an H-pattern slot. Yet across enthusiast garages, specialty automotive orders, and collector auctions, the stick-shift is experiencing an impassioned resurgence.</p>
 
@@ -181,31 +229,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'Restomods: When Classic Beauty Meets Modern Reliability',
     category: 'Culture',
     date: '2026-09-22',
-    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Handcrafted classic restomod coupe with carbon-composite roof and modern wide-track geometry',
+    fittingsImage: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'TIG-welded chromoly tubular chassis spaceframe reinforcements and suspension mounting brackets',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=480&q=70',
         title: 'Handcrafted Carbon-Bodied Restomod Coupe',
         caption: 'Bespoke classic chassis incorporating carbon-composite roof skin, widened fenders, and modern aero floor.',
+        alt: 'Restored vintage coupe with modern wide-body carbon composite coachwork',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=480&q=70',
         title: 'Tubular Spaceframe Chassis Welding & Brackets',
         caption: 'TIG-welded chromoly steel spaceframe reinforcements and structural gusset fittings tripling torsional rigidity.',
+        alt: 'TIG-welded chromoly steel spaceframe chassis tubing and brackets',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=480&q=70',
         title: 'Billet Aluminum Double-Wishbone Suspension Uprights',
         caption: 'Aircraft-grade 7075 aluminum uprights and multi-way adjustable remote coilover fittings.',
+        alt: 'CNC machined 7075 aluminum suspension upright and coilover mounting fittings',
         type: 'fitting',
       },
     ],
     summary:
       'Restomods preserve the romantic visual proportions of vintage icons while engineering modern chassis stiffness, disc braking, and fuel-injected reliability underneath.',
     tags: ['Restomod', 'Classics', 'Design', 'Craftsmanship'],
+    // SEO Class Project Specifications
+    seoTitle: 'Classic Restomods: Vintage Looks with Modern Speed', // 50 chars (< 60)
+    seoDescription:
+      'Discover how classic restomods combine vintage styling with carbon fiber and EFI. Read our build breakdown to find out what it takes to modernize an icon today.', // 159 chars (< 160)
+    h1Heading: 'Restomods: When Classic Beauty Meets Modern Reliability',
+    primaryKeyword: 'Classic Restomods',
+    clickReason: 'Read our build breakdown to find out what it takes to modernize an icon today.',
     content: `
       <p class="lead">Few automotive sights equal the sculpted sheet metal of a 1960s sports car. Yet historic classic ownership often arrives paired with vapor lock, carburetor tuning woes, flexing steel frames, and drum brakes prone to rapid thermal fade. The restomod culture bridges that divide.</p>
 
@@ -222,31 +282,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'Active Suspension Systems: The End of the Bumpy Ride',
     category: 'Maintenance',
     date: '2026-09-15',
-    image: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Dynamic test vehicle demonstrating zero body roll with 48V active electro-hydraulic suspension',
+    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: '48V electro-hydraulic fluid damper manifold and high-pressure flex lines for adaptive damping',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=480&q=70',
         title: 'Active Chassis Dynamic Stability Testing',
         caption: 'High-speed active suspension maintaining completely flat chassis composure and zero body roll through transient maneuvers.',
+        alt: 'Active chassis suspension testing flat composure on dynamic test track',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'High-Pressure Damper Hydraulic Manifold & Lines',
         caption: '48V electro-hydraulic fluid distribution manifold and high-pressure flex lines altering damping rates in under 15ms.',
+        alt: '48V adaptive damper hydraulic fluid manifold lines and electronic solenoid valves',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=480&q=70',
         title: 'Optical Chassis Telemetry & Processing ECU Board',
         caption: 'High-speed electronic processing unit calculating predictive damper adjustments from forward optical stereo cameras.',
+        alt: 'Chassis telemetry electronic control unit circuit board',
         type: 'fitting',
       },
     ],
     summary:
       'Predictive stereo optical cameras, 48-volt electromechanical actuators, and magnetorheological fluid dampers permanently solve the ride versus handling compromise.',
     tags: ['Chassis', 'Suspension', 'Maintenance', 'Dynamics'],
+    // SEO Class Project Specifications
+    seoTitle: 'Active Car Suspension: How Cameras Cancel Potholes', // 50 chars (< 60)
+    seoDescription:
+      'Learn how active car suspension systems and road cameras absorb potholes instantly. Read our chassis guide to see how modern luxury cars float over bumps.', // 156 chars (< 160)
+    h1Heading: 'Active Suspension Systems: The End of the Bumpy Ride',
+    primaryKeyword: 'Active Car Suspension',
+    clickReason: 'Read our chassis guide to see how modern luxury cars float over bumps.',
     content: `
       <p class="lead">For over a century, automotive chassis tuning required an inescapable compromise: tune spring and damper rates soft for passenger cushion, or calibrate firm for flat cornering and high-speed stability. 48-volt electro-hydraulic active suspension has dissolved that limitation.</p>
 
@@ -263,31 +335,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'Top 5 Underrated Hot Hatches of the Last Decade',
     category: 'Daily Drivers',
     date: '2026-09-08',
-    image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Turbocharged lightweight front-wheel-drive hot hatchback attacking tight technical switchback apex',
+    fittingsImage: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'Billet engine pitching torque mount and reinforced polyurethane stabilizer bushings',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=480&q=70',
         title: 'Turbocharged Front-Drive Apex Cornering',
         caption: 'Featherweight front-drive hot hatch rotating neatly through a technical mountain switchback.',
+        alt: 'Sporty hot hatchback cornering sharply on a winding mountain road',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=480&q=70',
         title: 'Billet Engine Torque Damper & Polyurethane Mounts',
         caption: 'Rigid engine pitching mount and reinforced stabilizer bracket engineered to eradicate front-wheel tramp and torque steer.',
+        alt: 'Billet engine torque mount and polyurethane suspension bushings',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'Turbocharger Plumbing & Boost Wastegate Fittings',
         caption: 'Reinforced silicone boost couplings, stainless T-bolt clamps, and pneumatic wastegate lines for crisp throttle response.',
+        alt: 'Turbocharger silicone intake couplings, clamps, and pneumatic lines',
         type: 'fitting',
       },
     ],
     summary:
       'Look beyond the ubiquitous Golf GTI and Civic Type R to discover five overlooked hot hatch gems delivering supreme smile-per-dollar ratios on real backroads.',
     tags: ['HotHatch', 'DailyDrivers', 'Performance', 'Guide'],
+    // SEO Class Project Specifications
+    seoTitle: 'Underrated Hot Hatches: 5 Affordable Turbo Weapons', // 50 chars (< 60)
+    seoDescription:
+      'Discover 5 underrated hot hatches delivering pure turbocharged backroad thrills for less money. Read our real-world buyer guide to choose your pocket rocket.', // 157 chars (< 160)
+    h1Heading: 'Top 5 Underrated Hot Hatches of the Last Decade',
+    primaryKeyword: 'Underrated Hot Hatches',
+    clickReason: 'Read our real-world buyer guide to choose your pocket rocket.',
     content: `
       <p class="lead">The hot hatchback remains the ultimate automotive all-rounder: spacious enough for grocery and gear runs, fuel efficient in weekday traffic, and intensely agile on canyon switchbacks. While mainstream coverage centers on the Golf GTI and Civic Type R, several brilliant lightweight performers deserve your attention.</p>
 
@@ -313,31 +397,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'AWD vs. 4WD: Understanding Traction Systems',
     category: 'Daily Drivers',
     date: '2026-08-30',
-    image: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Symmetrical all-wheel drive performance vehicle carving through deep snow and icy tarmac',
+    fittingsImage: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'High-pressure hydraulic center transfer coupling lines and wet clutch pack central differential',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=480&q=70',
         title: 'Full-Time Symmetrical AWD Snow Launch',
         caption: 'Full-time symmetrical all-wheel drive transmitting torque across four wheels on slick winter surfaces.',
+        alt: 'All-wheel drive vehicle accelerating on snow-covered road',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'Center Transfer Coupling Fluid Lines & Fittings',
         caption: 'High-pressure hydraulic routing for wet clutch pack central diff vectoring instant torque between axles.',
+        alt: 'Center transfer case hydraulic lines and differential fittings',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=480&q=70',
         title: 'Billet Axle Half-Shaft Hub Flanges',
         caption: 'High-tensile CNC drive hub flanges engineered to handle extreme torque multiplication in low-range 4WD modes.',
+        alt: 'Billet steel axle half-shaft hub flange and wheel bearing hub',
         type: 'fitting',
       },
     ],
     summary:
       'Both deliver power to all four tire contact patches, but their underlying mechanical architectures dictate vastly different behaviors on dry pavement versus deep snow.',
     tags: ['AWD', '4WD', 'Offroad', 'WinterDriving', 'Tech'],
+    // SEO Class Project Specifications
+    seoTitle: 'AWD vs 4WD: Which Drivetrain Wins on Snow and Ice?', // 50 chars (< 60)
+    seoDescription:
+      'Learn key AWD vs 4WD mechanical differences across winter snow, mud, and dry roads. Read our drivetrain breakdown to choose the right traction system today.', // 156 chars (< 160)
+    h1Heading: 'AWD vs. 4WD: Understanding Traction Systems',
+    primaryKeyword: 'AWD vs 4WD',
+    clickReason: 'Read our drivetrain breakdown to choose the right traction system today.',
     content: `
       <p class="lead">Automakers frequently utilize "All-Wheel Drive" and "Four-Wheel Drive" interchangeably in marketing campaigns. Yet their internal mechanical layouts are fundamentally distinct, with major implications for road handling, maintenance, and off-road capability.</p>
 
@@ -354,31 +450,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'The Hyper-SUV Trend: Utility Meets Track Performance',
     category: 'Exotics',
     date: '2026-08-20',
-    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Twin-turbo 700hp luxury performance hyper-SUV with aerodynamic front cooling intakes on race circuit',
+    fittingsImage: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'CNC machined forged aluminum caliper mounting brackets and 440mm carbon-ceramic disc rotor',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=480&q=70',
         title: 'Twin-Turbo Hyper-SUV Circuit Assessment',
         caption: 'Wide-track high-performance SUV featuring aggressive front cooling ducts and lowered aerodynamic stance.',
+        alt: 'Luxury performance hyper-SUV tackling a track apex at high speed',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=480&q=70',
         title: 'Billet Multi-Piston Caliper Mounting Bracket',
         caption: 'CNC machined forged aluminum caliper brackets accommodating 440mm carbon-ceramic disc assemblies.',
+        alt: 'Forged aluminum multi-piston brake caliper mounting bracket',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=480&q=70',
         title: 'Active Anti-Roll Hydraulic Accumulator & Plumbed Valves',
         caption: 'Central electromechanical actuator splitting front anti-roll bar, generating up to 1,400 Nm of instant counter-torque.',
+        alt: 'Active anti-roll bar hydraulic accumulator and high-pressure valve fittings',
         type: 'fitting',
       },
     ],
     summary:
       'Prestigious supercar marques have redefined the sport utility vehicle, creating 700+ horsepower family haulers capable of humiliating bona fide track cars.',
     tags: ['SuperSUV', 'Exotics', 'V12', 'Performance'],
+    // SEO Class Project Specifications
+    seoTitle: 'Hyper-SUVs: How 700HP Family Haulers Beat Supercars', // 51 chars (< 60)
+    seoDescription:
+      'See how 700HP hyper-SUVs use active anti-roll and torque vectoring to corner on track. Read our circuit test to find out if high-riding beasts deliver today.', // 157 chars (< 160)
+    h1Heading: 'The Hyper-SUV Trend: Utility Meets Track Performance',
+    primaryKeyword: 'Hyper-SUVs',
+    clickReason: 'Read our circuit test to find out if high-riding beasts deliver today.',
     content: `
       <p class="lead">A decade ago, the notion of legendary exotic constructors building tall, five-door SUVs was met with skepticism. Fast forward to today, and the "Hyper-SUV" category has proven a monumental commercial success that directly finances bespoke racing and supercar engineering initiatives.</p>
 
@@ -395,31 +503,43 @@ export const ARTICLES_DATA: Article[] = [
     title: 'Winter Hibernation: How to Properly Store a Classic Car',
     category: 'Maintenance',
     date: '2026-08-10',
-    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1400&q=80',
-    fittingsImage: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=720&q=70',
+    imageAlt: 'Classic vintage collector automobile parked in clean climate-controlled storage on tire cradles',
+    fittingsImage: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=500&q=70',
+    fittingsImageAlt: 'Sealed fluid evacuation quick-disconnect couplers and fuel system winterization maintenance apparatus',
     gallery: [
       {
-        url: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=480&q=70',
         title: 'Preserved Vintage Machine in Climate Storage',
         caption: 'Pristine collector vehicle elevated and protected inside a climate-controlled preservation facility.',
+        alt: 'Vintage classic roadster elevated on jacks inside clean winter storage facility',
         type: 'car',
       },
       {
-        url: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=480&q=70',
         title: 'Fluid Evacuation Quick-Disconnect Couplers',
         caption: 'Automotive fluid service apparatus and sealed fluid coupling fittings used during pre-storage maintenance flushes.',
+        alt: 'Fluid evacuation quick-disconnect couplers and braided lines for automotive service',
         type: 'fitting',
       },
       {
-        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=480&q=70',
         title: 'Precision Torque Hardware & Protective Layup Tools',
         caption: 'Automotive workshop tools and hardware used to prepare vintage engines and fuel tanks for seasonal hibernation.',
+        alt: 'Precision automotive mechanic torque wrenches and storage preparation hardware',
         type: 'fitting',
       },
     ],
     summary:
       'Never simply park a cherished machine under a cloth tarp. Follow our comprehensive engineering checklist to protect vintage steel, fuels, and seals from winter degradation.',
     tags: ['ClassicCar', 'Maintenance', 'WinterCare', 'DIY'],
+    // SEO Class Project Specifications
+    seoTitle: 'Classic Car Storage: 5 Steps to Winterize Your Ride', // 51 chars (< 60)
+    seoDescription:
+      'Master our 5-step classic car storage guide to protect vintage steel through freezing winter. Read our garage checklist to prevent rust, bad fuel, and damage.', // 159 chars (< 160)
+    h1Heading: 'Winter Hibernation: How to Properly Store a Classic Car',
+    primaryKeyword: 'Classic Car Storage',
+    clickReason: 'Read our garage checklist to prevent rust, bad fuel, and damage.',
     content: `
       <p class="lead">Road salt and corrosive brine are destructive hazards for classic sheet metal. Yet parking a cherished vintage car unattended in an unheated garage for four months can induce just as much quiet damage: gummed carburetor passages, acid-pitted bearings, flat-spotted vintage tires, and seized brake calipers.</p>
 

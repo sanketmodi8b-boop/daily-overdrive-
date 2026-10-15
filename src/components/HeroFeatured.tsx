@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Bookmark, Clock, Calendar, Gauge } from 'lucide-react';
 import type { Article } from '../types/blog';
 import { calcReadTime, formatDate } from '../utils/blog';
+import { getOptimizedImageUrl } from '../utils/seo';
 
 interface HeroFeaturedProps {
   article: Article;
@@ -18,6 +19,7 @@ export const HeroFeatured: React.FC<HeroFeaturedProps> = ({
 }) => {
   const readTime = calcReadTime(article.content);
   const articleUrl = `/article/${article.slug}`;
+  const optimizedImage = getOptimizedImageUrl(article.image, 800, 70);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -28,19 +30,21 @@ export const HeroFeatured: React.FC<HeroFeaturedProps> = ({
   return (
     <section className="mb-16" aria-labelledby="featured-story-heading">
       <div className="relative rounded-3xl overflow-hidden bg-[#0b0e14] border border-slate-200 dark:border-[#222631] shadow-2xl group min-h-[460px] flex items-end">
-        {/* Background Image with Rich Automotive Lighting */}
+        {/* Background Image with Rich Automotive Lighting & Optimized Compression */}
         <a
           href={articleUrl}
           onClick={handleLinkClick}
           className="absolute inset-0 z-0 block cursor-pointer"
-          aria-label={`Read featured lead: ${article.title}`}
+          aria-label={`Read featured lead story: ${article.title}`}
         >
           <img
-            src={article.image}
-            alt={article.title}
+            src={optimizedImage}
+            alt={article.imageAlt || `Featured story: ${article.title}`}
+            loading="eager"
+            decoding="async"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src =
-                'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80';
+                'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=720&q=70';
             }}
             className="w-full h-full object-cover object-center opacity-75 group-hover:opacity-85 group-hover:scale-105 transition-all duration-1000 ease-out"
           />
@@ -48,7 +52,7 @@ export const HeroFeatured: React.FC<HeroFeaturedProps> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-[#0b0e14] via-[#0b0e14]/75 to-transparent sm:bg-gradient-to-r sm:from-[#0b0e14] sm:via-[#0b0e14]/85 sm:to-transparent" />
         </a>
 
-        {/* Content Container - Ample Breathing Room, Unclustered */}
+        {/* Content Container */}
         <div className="relative z-10 p-6 sm:p-10 lg:p-14 max-w-3xl text-white pointer-events-none">
           <div className="flex flex-wrap items-center gap-3 mb-4 text-xs font-semibold">
             <span className="bg-[#d90429] text-white uppercase tracking-[0.2em] px-3 py-1 rounded text-[11px] font-bold shadow-md shadow-red-600/30">
@@ -98,7 +102,7 @@ export const HeroFeatured: React.FC<HeroFeaturedProps> = ({
                     ? 'bg-[#d90429] border-[#d90429] text-white shadow-lg shadow-red-600/40'
                     : 'bg-black/50 hover:bg-black/70 border-white/20 text-white backdrop-blur-md'
                 }`}
-                aria-label={isBookmarked ? 'Remove featured from saved' : 'Save featured'}
+                aria-label={isBookmarked ? `Remove featured article from saved list` : `Save featured article for later reading`}
               >
                 <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
               </button>
@@ -107,8 +111,9 @@ export const HeroFeatured: React.FC<HeroFeaturedProps> = ({
                 href={articleUrl}
                 onClick={handleLinkClick}
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#d90429] hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-red-600/30 group-hover:scale-102"
+                aria-label={`Read full feature: ${article.title}`}
               >
-                <span>Read Feature</span>
+                <span>Read Full Feature</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>

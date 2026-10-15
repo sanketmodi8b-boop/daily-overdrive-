@@ -7,8 +7,10 @@ import { ArticleView } from './components/ArticleView';
 import { SavedView } from './components/SavedView';
 import { NewsletterBanner } from './components/NewsletterBanner';
 import { Footer } from './components/Footer';
+import { SeoClassInspector } from './components/SeoClassInspector';
 import { ARTICLES_DATA } from './data/articles';
 import { filterAndSortArticles, slugToCategory, categoryToSlug } from './utils/blog';
+import { getPageSeoData, updateDocumentHead } from './utils/seo';
 import { useRouter } from './hooks/useRouter';
 import type { Article, Category, SortOption } from './types/blog';
 import { SearchX } from 'lucide-react';
@@ -22,7 +24,7 @@ export default function App() {
     const stored = localStorage.getItem('theme');
     if (stored === 'light') return false;
     if (stored === 'dark') return true;
-    return true; // Default to dark automotive theme
+    return true; // Default to dark automotive cockpit theme
   });
 
   useEffect(() => {
@@ -50,18 +52,27 @@ export default function App() {
     return 'All';
   }, [routeState.categorySlug]);
 
-  // Sync document title for non-article routes
+  // Currently viewed article if on /article/:slug
+  const activeArticle = useMemo(() => {
+    if (!routeState.articleSlug) return null;
+    return ARTICLES_DATA.find((a) => a.slug === routeState.articleSlug) || null;
+  }, [routeState.articleSlug]);
+
+  // Derive SEO metadata for current page
+  const pageSeo = useMemo(() => {
+    return getPageSeoData(
+      currentPath,
+      routeState.articleSlug,
+      routeState.categorySlug,
+      routeState.isSavedPage,
+      activeArticle
+    );
+  }, [currentPath, routeState.articleSlug, routeState.categorySlug, routeState.isSavedPage, activeArticle]);
+
+  // Synchronize document <head> tags for SEO on all routes
   useEffect(() => {
-    if (routeState.articleSlug) {
-      // Handled dynamically inside ArticleView
-    } else if (routeState.isSavedPage) {
-      document.title = 'Saved Dispatches — The Daily Overdrive';
-    } else if (routeState.categorySlug) {
-      document.title = `${currentCategory} Archive — The Daily Overdrive`;
-    } else {
-      document.title = 'The Daily Overdrive | Premier Automotive Journal';
-    }
-  }, [routeState, currentCategory]);
+    updateDocumentHead(pageSeo, activeArticle);
+  }, [pageSeo, activeArticle]);
 
   // --- Bookmarks State with Persistence ---
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>(() => {
@@ -109,12 +120,6 @@ export default function App() {
   const leadArticle = useMemo(() => {
     return ARTICLES_DATA.find((a) => a.featured) || ARTICLES_DATA[0];
   }, []);
-
-  // Currently viewed article if on /article/:slug
-  const activeArticle = useMemo(() => {
-    if (!routeState.articleSlug) return null;
-    return ARTICLES_DATA.find((a) => a.slug === routeState.articleSlug) || null;
-  }, [routeState.articleSlug]);
 
   const handleSelectCategory = (cat: Category) => {
     if (cat === 'All') {
@@ -168,6 +173,7 @@ export default function App() {
             <button
               onClick={() => navigate('/')}
               className="px-6 py-2.5 rounded-lg bg-[#d90429] text-white font-bold text-xs uppercase tracking-wider"
+              aria-label="Return to journal home page"
             >
               Return to Journal
             </button>
@@ -182,94 +188,108 @@ export default function App() {
           />
         ) : (
           /* Route 3: Home & Category Archive Pages (/, /category/:category) */
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-20 w-full">
-            {/* Lead Story Marquee on Home (only when on '/' and no active search) */}
-            {currentCategory === 'All' && !searchQuery && leadArticle && (
-              <HeroFeatured
-                article={leadArticle}
-                onRead={(slug) => navigate(`/article/${slug}`)}
-                isBookmarked={bookmarkedIds.includes(leadArticle.id)}
-                onToggleBookmark={toggleBookmark}
-              />
-            )}
+          <div>
+            {/* Live SEO Class Project Inspector for Home & Category Pages */}
+            <SeoClassInspector seo={pageSeo} uniqueUrl={pageSeo.canonicalUrl} />
 
-            {/* Page Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl sm:text-5xl font-black tracking-tight uppercase italic text-slate-900 dark:text-white">
-                {currentCategory === 'All' ? (
-                  <>
-                    Latest <span className="text-[#d90429]">Dispatches</span>
-                  </>
-                ) : (
-                  <>
-                    {currentCategory} <span className="text-[#d90429]">Archive</span>
-                  </>
-                )}
-              </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-normal max-w-2xl">
-                {currentCategory === 'All'
-                  ? 'Deep technical dives, exotic aerodynamics, and mechanical culture.'
-                  : `Curated dispatches and engineering breakdowns in ${currentCategory}.`}
-              </p>
-            </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-20 w-full">
+              {/* Lead Story Marquee on Home (only when on '/' and no active search) */}
+              {currentCategory === 'All' && !searchQuery && leadArticle && (
+                <HeroFeatured
+                  article={leadArticle}
+                  onRead={(slug) => navigate(`/article/${slug}`)}
+                  isBookmarked={bookmarkedIds.includes(leadArticle.id)}
+                  onToggleBookmark={toggleBookmark}
+                />
+              )}
 
-            {/* Clean Category Navigation & Sorting */}
-            <CategoryFilter
-              categories={categoriesList}
-              currentCategory={currentCategory}
-              onSelectCategory={handleSelectCategory}
-              sortBy={sortBy}
-              onSortChange={setSortBy}
-              searchQuery={searchQuery}
-              onClearSearch={() => setSearchQuery('')}
-              totalFilteredCount={filteredArticles.length}
-            />
-
-            {/* Articles Grid or Empty Fallback */}
-            {filteredArticles.length > 0 ? (
-              <div
-                id="blogGrid"
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              >
-                {filteredArticles.map((article, idx) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
-                    onSelect={(slug) => navigate(`/article/${slug}`)}
-                    isBookmarked={bookmarkedIds.includes(article.id)}
-                    onToggleBookmark={toggleBookmark}
-                    priority={idx < 3}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div
-                id="noResults"
-                className="flex flex-col items-center justify-center py-20 px-4 text-center rounded-2xl bg-white dark:bg-[#15181e] border border-[#e2e5ea] dark:border-[#222631]"
-              >
-                <div className="p-4 rounded-xl bg-slate-100 dark:bg-[#1e222b] text-slate-400 mb-4">
-                  <SearchX className="w-8 h-8" />
+              {/* Labeled Page Header (H1) for SEO Evaluation */}
+              <div className="mb-8">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-500/40">
+                    Page Heading (&lt;h1&gt;)
+                  </span>
+                  <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
+                    Target Keyword: "{pageSeo.primaryKeyword}"
+                  </span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                  No Dispatches Found
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mb-6">
-                  No articles matched your criteria. Clear filters or explore all topics.
+                <h1 className="text-3xl sm:text-5xl font-black tracking-tight uppercase italic text-slate-900 dark:text-white">
+                  {currentCategory === 'All' ? (
+                    <>
+                      Latest <span className="text-[#d90429]">Dispatches</span>: Engineering &amp; Speed
+                    </>
+                  ) : (
+                    <>
+                      {currentCategory} <span className="text-[#d90429]">Archive</span>
+                    </>
+                  )}
+                </h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-normal max-w-2xl">
+                  {currentCategory === 'All'
+                    ? 'Deep technical dives, exotic aerodynamics, and mechanical culture.'
+                    : `Curated dispatches and engineering breakdowns in ${currentCategory}.`}
                 </p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    navigate('/');
-                  }}
-                  className="px-5 py-2 rounded-lg bg-[#d90429] hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  Reset Filters
-                </button>
               </div>
-            )}
 
-            {/* Newsletter Subscription */}
-            <NewsletterBanner />
+              {/* Category Navigation & Sorting */}
+              <CategoryFilter
+                categories={categoriesList}
+                currentCategory={currentCategory}
+                onSelectCategory={handleSelectCategory}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                searchQuery={searchQuery}
+                onClearSearch={() => setSearchQuery('')}
+                totalFilteredCount={filteredArticles.length}
+              />
+
+              {/* Articles Grid or Empty Fallback */}
+              {filteredArticles.length > 0 ? (
+                <div
+                  id="blogGrid"
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                >
+                  {filteredArticles.map((article, idx) => (
+                    <ArticleCard
+                      key={article.id}
+                      article={article}
+                      onSelect={(slug) => navigate(`/article/${slug}`)}
+                      isBookmarked={bookmarkedIds.includes(article.id)}
+                      onToggleBookmark={toggleBookmark}
+                      priority={idx < 3}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div
+                  id="noResults"
+                  className="flex flex-col items-center justify-center py-20 px-4 text-center rounded-2xl bg-white dark:bg-[#15181e] border border-[#e2e5ea] dark:border-[#222631]"
+                >
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-[#1e222b] text-slate-400 mb-4">
+                    <SearchX className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    No Dispatches Found
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mb-6">
+                    No articles matched your criteria. Clear filters or explore all topics.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      navigate('/');
+                    }}
+                    className="px-5 py-2 rounded-lg bg-[#d90429] hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                    aria-label="Reset search filters to default"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              )}
+
+              {/* Newsletter Subscription */}
+              <NewsletterBanner />
+            </div>
           </div>
         )}
       </main>
