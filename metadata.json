@@ -1,0 +1,6 @@
+{
+  "name": "The Daily Overdrive",
+  "description": "Premier automotive journal featuring deep dives into automotive engineering, exotic car reviews, synthetic fuels, and car culture.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
