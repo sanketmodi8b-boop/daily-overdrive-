@@ -50,6 +50,19 @@ export default function App() {
     return 'All';
   }, [routeState.categorySlug]);
 
+  // Sync document title for non-article routes
+  useEffect(() => {
+    if (routeState.articleSlug) {
+      // Handled dynamically inside ArticleView
+    } else if (routeState.isSavedPage) {
+      document.title = 'Saved Dispatches — The Daily Overdrive';
+    } else if (routeState.categorySlug) {
+      document.title = `${currentCategory} Archive — The Daily Overdrive`;
+    } else {
+      document.title = 'The Daily Overdrive | Premier Automotive Journal';
+    }
+  }, [routeState, currentCategory]);
+
   // --- Bookmarks State with Persistence ---
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>(() => {
     try {

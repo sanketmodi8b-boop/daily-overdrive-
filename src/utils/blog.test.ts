@@ -92,3 +92,22 @@ test('filterAndSortArticles filters by category correctly without writer depende
   assert.equal(exotics.length, 1);
   assert.equal(exotics[0].title, 'Active Aerodynamics: The Invisible Forces Shaping Hypercars');
 });
+
+test('parsePath correctly extracts unique article slugs from various URL formats', async () => {
+  const { parsePath } = await import('../hooks/useRouter.ts');
+  
+  // Standard pathname
+  const route1 = parsePath('/article/solid-state-battery-revolution');
+  assert.equal(route1.articleSlug, 'solid-state-battery-revolution');
+  assert.equal(route1.path, '/article/solid-state-battery-revolution');
+
+  // Query parameter fallback
+  const route2 = parsePath('/', '?article=active-aerodynamics-hypercars');
+  assert.equal(route2.articleSlug, 'active-aerodynamics-hypercars');
+  assert.equal(route2.path, '/article/active-aerodynamics-hypercars');
+
+  // Hash fallback
+  const route3 = parsePath('/', '', '#/article/synthetic-fuels-ice-lifeline');
+  assert.equal(route3.articleSlug, 'synthetic-fuels-ice-lifeline');
+  assert.equal(route3.path, '/article/synthetic-fuels-ice-lifeline');
+});

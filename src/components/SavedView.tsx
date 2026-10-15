@@ -21,12 +21,17 @@ export const SavedView: React.FC<SavedViewProps> = ({
       {/* Header */}
       <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#e2e5ea] dark:border-[#222631] pb-6">
         <div>
-          <button
-            onClick={() => onNavigate('/')}
+          <a
+            href="/"
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              onNavigate('/');
+            }}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-[#d90429] mb-3 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Journal
-          </button>
+          </a>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg bg-red-50 dark:bg-red-950/40 text-[#d90429]">
               <Bookmark className="w-6 h-6 fill-current" />
@@ -77,13 +82,18 @@ export const SavedView: React.FC<SavedViewProps> = ({
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
             Click the bookmark icon on any dispatch across the journal to save it for offline or later reading.
           </p>
-          <button
-            onClick={() => onNavigate('/')}
+          <a
+            href="/"
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              onNavigate('/');
+            }}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#d90429] hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
           >
             <span>Explore All Stories</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </a>
         </div>
       )}
     </div>

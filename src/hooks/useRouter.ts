@@ -7,11 +7,65 @@ export interface RouteState {
   isSavedPage: boolean;
 }
 
-export function parsePath(pathname: string): RouteState {
+export function parsePath(pathname: string, search: string = '', hash: string = ''): RouteState {
+  // 1. Check query parameter fallback: ?article=slug
+  if (search) {
+    const params = new URLSearchParams(search);
+    const queryArticle = params.get('article');
+    if (queryArticle) {
+      return {
+        path: `/article/${queryArticle}`,
+        articleSlug: queryArticle,
+        categorySlug: null,
+        isSavedPage: false,
+      };
+    }
+    const queryCat = params.get('category') || params.get('cat');
+    if (queryCat) {
+      return {
+        path: `/category/${queryCat}`,
+        articleSlug: null,
+        categorySlug: queryCat,
+        isSavedPage: false,
+      };
+    }
+  }
+
+  // 2. Check hash fallback: #/article/slug or #/saved
+  if (hash) {
+    const cleanHash = hash.replace(/^#\/?/, '/');
+    const hashArticleMatch = cleanHash.match(/^\/article\/([^/?#]+)/);
+    if (hashArticleMatch) {
+      return {
+        path: `/article/${hashArticleMatch[1]}`,
+        articleSlug: hashArticleMatch[1],
+        categorySlug: null,
+        isSavedPage: false,
+      };
+    }
+    const hashCatMatch = cleanHash.match(/^\/category\/([^/?#]+)/);
+    if (hashCatMatch) {
+      return {
+        path: `/category/${hashCatMatch[1]}`,
+        articleSlug: null,
+        categorySlug: hashCatMatch[1],
+        isSavedPage: false,
+      };
+    }
+    if (cleanHash === '/saved' || cleanHash === 'saved') {
+      return {
+        path: '/saved',
+        articleSlug: null,
+        categorySlug: null,
+        isSavedPage: true,
+      };
+    }
+  }
+
+  // 3. Primary pathname routing: /article/:slug
   const cleanPath = pathname.replace(/\/$/, '') || '/';
 
-  // Match /article/:slug
-  const articleMatch = cleanPath.match(/^\/article\/([^/]+)/);
+  const articleMatch = cleanPath.match(/^\/article\/([^/?#]+)/);
   if (articleMatch) {
     return {
       path: cleanPath,
@@ -21,8 +75,8 @@ export function parsePath(pathname: string): RouteState {
     };
   }
 
-  // Match /category/:category
-  const categoryMatch = cleanPath.match(/^\/category\/([^/]+)/);
+  // /category/:category
+  const categoryMatch = cleanPath.match(/^\/category\/([^/?#]+)/);
   if (categoryMatch) {
     return {
       path: cleanPath,
@@ -32,7 +86,7 @@ export function parsePath(pathname: string): RouteState {
     };
   }
 
-  // Match /saved
+  // /saved
   if (cleanPath === '/saved') {
     return {
       path: cleanPath,
@@ -54,16 +108,22 @@ export function parsePath(pathname: string): RouteState {
 export function useRouter() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
     if (typeof window === 'undefined') return '/';
-    return window.location.pathname;
+    const parsed = parsePath(window.location.pathname, window.location.search, window.location.hash);
+    return parsed.path;
   });
 
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
+      const parsed = parsePath(window.location.pathname, window.location.search, window.location.hash);
+      setCurrentPath(parsed.path);
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
   }, []);
 
   const navigate = useCallback((to: string, replace = false) => {

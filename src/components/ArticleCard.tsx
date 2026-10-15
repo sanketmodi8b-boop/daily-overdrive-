@@ -19,27 +19,39 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   priority = false,
 }) => {
   const readTime = calcReadTime(article.content);
+  const articleUrl = `/article/${article.slug}`;
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Let browser handle new tab / window shortcuts
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    onSelect(article.slug);
+  };
 
   return (
-    <article
-      onClick={() => onSelect(article.slug)}
-      className="group flex flex-col bg-white dark:bg-[#15181e] rounded-2xl overflow-hidden border border-[#e2e5ea] dark:border-[#222631] hover:border-slate-300 dark:hover:border-slate-700 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-    >
+    <article className="group flex flex-col bg-white dark:bg-[#15181e] rounded-2xl overflow-hidden border border-[#e2e5ea] dark:border-[#222631] hover:border-slate-300 dark:hover:border-slate-700 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       {/* Article Image Container */}
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
-        <img
-          src={article.image}
-          alt={article.title}
-          loading={priority ? 'eager' : 'lazy'}
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src =
-              'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80';
-          }}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-        />
+        <a
+          href={articleUrl}
+          onClick={handleLinkClick}
+          className="block w-full h-full cursor-pointer"
+          aria-label={`Read ${article.title}`}
+        >
+          <img
+            src={article.image}
+            alt={article.title}
+            loading={priority ? 'eager' : 'lazy'}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src =
+                'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80';
+            }}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+          />
+        </a>
 
         {/* Minimal Category Tag */}
-        <div className="absolute top-4 left-4 z-10">
+        <div className="absolute top-4 left-4 z-10 pointer-events-none">
           <span className="bg-[#121316]/85 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded border border-white/10">
             {article.category}
           </span>
@@ -51,7 +63,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             e.stopPropagation();
             onToggleBookmark(article.id);
           }}
-          className={`absolute top-4 right-4 z-10 p-2 rounded-lg backdrop-blur-md transition-all ${
+          className={`absolute top-4 right-4 z-10 p-2 rounded-lg backdrop-blur-md transition-all cursor-pointer ${
             isBookmarked
               ? 'bg-[#d90429] text-white shadow-md shadow-red-600/40'
               : 'bg-black/40 hover:bg-black/60 text-white'
@@ -65,7 +77,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       {/* Content */}
       <div className="flex-1 p-6 sm:p-7 flex flex-col justify-between">
         <div>
-          {/* Metadata bar without writer names */}
+          {/* Metadata bar */}
           <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider mb-3">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
@@ -85,9 +97,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             )}
           </div>
 
-          {/* Title */}
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white leading-snug mb-3 group-hover:text-[#d90429] transition-colors">
-            {article.title}
+          {/* Title as real link */}
+          <h3 className="text-xl font-bold leading-snug mb-3">
+            <a
+              href={articleUrl}
+              onClick={handleLinkClick}
+              className="text-slate-900 dark:text-white group-hover:text-[#d90429] transition-colors"
+            >
+              {article.title}
+            </a>
           </h3>
 
           {/* Excerpt */}
@@ -97,9 +115,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
 
         {/* Footer Link */}
-        <div className="pt-4 border-t border-slate-100 dark:border-[#222631] flex items-center justify-between text-xs font-bold text-[#d90429]">
-          <span className="uppercase tracking-wider">Read Full Analysis</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+        <div className="pt-4 border-t border-slate-100 dark:border-[#222631]">
+          <a
+            href={articleUrl}
+            onClick={handleLinkClick}
+            className="flex items-center justify-between text-xs font-bold text-[#d90429] hover:underline"
+          >
+            <span className="uppercase tracking-wider">Read Full Analysis</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+          </a>
         </div>
       </div>
     </article>

@@ -40,8 +40,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-4">
           {/* Masthead Logo */}
-          <button
-            onClick={() => onNavigate('/')}
+          <a
+            href="/"
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              onNavigate('/');
+            }}
             className="flex items-center gap-3 text-left group focus:outline-none cursor-pointer"
             aria-label="The Daily Overdrive Home"
           >
@@ -56,12 +61,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Automotive Journal
               </span>
             </div>
-          </button>
+          </a>
 
           {/* Desktop Navigation Links - Clean Editorial Style */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-            <button
-              onClick={() => onNavigate('/')}
+            <a
+              href="/"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                onNavigate('/');
+              }}
               className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-md ${
                 activePath === '/' && currentCategory === 'All'
                   ? 'text-[#d90429] bg-red-50 dark:bg-red-950/30'
@@ -69,13 +79,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               All Stories
-            </button>
+            </a>
             {navCategories.map((item) => {
               const isActive = activePath === item.path || currentCategory === item.name;
               return (
-                <button
+                <a
                   key={item.name}
-                  onClick={() => onNavigate(item.path)}
+                  href={item.path}
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                    e.preventDefault();
+                    onNavigate(item.path);
+                  }}
                   className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-md ${
                     isActive
                       ? 'text-[#d90429] bg-red-50 dark:bg-red-950/30'
@@ -83,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   {item.name}
-                </button>
+                </a>
               );
             })}
           </nav>
@@ -122,8 +137,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* Saved Articles Link */}
-            <button
-              onClick={() => onNavigate('/saved')}
+            <a
+              href="/saved"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                onNavigate('/saved');
+              }}
               className={`relative p-2.5 rounded-lg border transition-colors cursor-pointer ${
                 activePath === '/saved'
                   ? 'border-[#d90429] bg-red-50 dark:bg-red-950/40 text-[#d90429]'
@@ -138,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {bookmarkCount}
                 </span>
               )}
-            </button>
+            </a>
 
             {/* Dark Mode Switcher */}
             <button
@@ -192,29 +212,38 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <nav className="lg:hidden py-4 border-t border-[#e2e5ea] dark:border-[#222631] space-y-1">
-            <button
-              onClick={() => {
+            <a
+              href="/"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
                 onNavigate('/');
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 hover:text-[#d90429]"
+              className="block w-full text-left px-3 py-2 text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 hover:text-[#d90429]"
             >
               All Stories
-            </button>
+            </a>
             {navCategories.map((item) => (
-              <button
+              <a
                 key={item.name}
-                onClick={() => {
+                href={item.path}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                  e.preventDefault();
                   onNavigate(item.path);
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-3 py-2 text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 hover:text-[#d90429]"
+                className="block w-full text-left px-3 py-2 text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 hover:text-[#d90429]"
               >
                 {item.name}
-              </button>
+              </a>
             ))}
-            <button
-              onClick={() => {
+            <a
+              href="/saved"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
                 onNavigate('/saved');
                 setMobileMenuOpen(false);
               }}
@@ -224,7 +253,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/60">
                 {bookmarkCount}
               </span>
-            </button>
+            </a>
           </nav>
         )}
       </div>

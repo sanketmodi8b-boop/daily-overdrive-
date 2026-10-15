@@ -3,6 +3,9 @@ import type { Article, Category, SortOption } from '../types/blog';
 export const DEFAULT_ARTICLE_IMAGE =
   'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80';
 
+export const DEFAULT_FITTING_IMAGE =
+  'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1200&q=80';
+
 /**
  * Calculates estimated reading time in minutes based on 200 words per minute.
  * Strips HTML tags before counting words.

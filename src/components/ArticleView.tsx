@@ -41,7 +41,16 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
   const readTime = calcReadTime(article.content);
 
-  // Track window scroll progress
+  // Dynamically update document title
+  useEffect(() => {
+    const originalTitle = document.title;
+    document.title = `${article.title} — The Daily Overdrive`;
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [article.title]);
+
+  // Track window scroll progress for top meter bar
   useEffect(() => {
     const handleScroll = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
@@ -65,11 +74,19 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   }, [selectedPhoto]);
 
   const handleShare = () => {
+    if (typeof window === 'undefined') return;
+    const url = window.location.href;
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2200);
+      setTimeout(() => setCopied(false), 2400);
     }
+  };
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    onNavigate(path);
   };
 
   // Find prev / next articles
@@ -84,43 +101,52 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   });
 
   return (
-    <article className="min-h-screen pb-24">
-      {/* Top Reading Progress Bar */}
-      <div className="fixed top-20 left-0 right-0 h-1 bg-transparent z-40">
+    <article className="min-h-screen pb-28">
+      {/* Top Tachometer Reading Progress Bar */}
+      <div className="fixed top-20 left-0 right-0 h-1 bg-transparent z-40 pointer-events-none">
         <div
           className="h-full bg-[#d90429] transition-all duration-150"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
-      {/* Header & Meta */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-8">
-        {/* Breadcrumb Navigation */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6 text-xs font-semibold text-slate-500 dark:text-slate-400">
-          <button
-            onClick={() => onNavigate('/')}
-            className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-[#d90429] transition-colors cursor-pointer"
+      {/* Header Container - Spacious, Uncluttered, Pure Editorial */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-10">
+        {/* Clean Breadcrumb Navigation */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <a
+            href="/"
+            onClick={(e) => handleLinkClick(e, '/')}
+            className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-[#d90429] dark:hover:text-[#d90429] transition-colors cursor-pointer group"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Journal</span>
-          </button>
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span>Return to Journal</span>
+          </a>
 
-          <div className="flex items-center gap-2">
-            <button onClick={() => onNavigate('/')} className="hover:underline cursor-pointer">
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider">
+            <a href="/" onClick={(e) => handleLinkClick(e, '/')} className="hover:underline">
               Journal
-            </button>
-            <span>/</span>
-            <button
-              onClick={() => onNavigate(`/category/${categoryToSlug(article.category)}`)}
-              className="text-[#d90429] hover:underline cursor-pointer uppercase font-bold"
+            </a>
+            <span className="text-slate-400">/</span>
+            <a
+              href={`/category/${categoryToSlug(article.category)}`}
+              onClick={(e) => handleLinkClick(e, `/category/${categoryToSlug(article.category)}`)}
+              className="text-[#d90429] hover:underline font-bold"
             >
               {article.category}
-            </button>
+            </a>
           </div>
         </div>
 
+        {/* Category Pill Tag */}
+        <div className="mb-4">
+          <span className="inline-block px-3 py-1 rounded bg-[#d90429]/10 text-[#d90429] dark:bg-[#d90429]/20 text-xs font-bold uppercase tracking-widest border border-[#d90429]/30">
+            {article.category} Analysis
+          </span>
+        </div>
+
         {/* Title */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-6">
+        <h1 className="text-3xl sm:text-5xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-6">
           {article.title}
         </h1>
 
@@ -129,30 +155,30 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           {article.summary}
         </p>
 
-        {/* Clean Editorial Metadata Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-[#e2e5ea] dark:border-[#222631] text-xs font-semibold text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-4">
+        {/* Professional Metadata & Action Bar - No Writer Name, Zero Clutter */}
+        <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200 dark:border-[#222631] text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
             <span className="flex items-center gap-1.5 uppercase tracking-wider font-bold text-slate-900 dark:text-white">
               <Gauge className="w-4 h-4 text-[#d90429]" />
               The Daily Overdrive
             </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
               {formatDate(article.date)}
             </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
               {readTime} min read
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={handleShare}
-              className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#e2e5ea] dark:border-[#222631] bg-white dark:bg-[#15181e] text-slate-700 dark:text-slate-300 hover:border-slate-400 transition-colors cursor-pointer"
-              aria-label="Share article link"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#222631] bg-white dark:bg-[#121620] text-slate-700 dark:text-slate-300 hover:border-[#d90429] dark:hover:border-[#d90429] transition-all cursor-pointer shadow-sm text-xs font-bold"
+              aria-label="Share article"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Share2 className="w-3.5 h-3.5" />}
               <span>{copied ? 'Link Copied' : 'Share'}</span>
@@ -160,10 +186,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
             <button
               onClick={() => onToggleBookmark(article.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border transition-all cursor-pointer shadow-sm text-xs font-bold ${
                 isBookmarked
-                  ? 'border-[#d90429] bg-red-50 dark:bg-red-950/40 text-[#d90429]'
-                  : 'border-[#e2e5ea] dark:border-[#222631] bg-white dark:bg-[#15181e] text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                  ? 'border-[#d90429] bg-[#d90429] text-white shadow-md shadow-red-600/30'
+                  : 'border-slate-200 dark:border-[#222631] bg-white dark:bg-[#121620] text-slate-700 dark:text-slate-300 hover:border-slate-400'
               }`}
               aria-label={isBookmarked ? 'Remove from saved' : 'Save article'}
             >
@@ -174,9 +200,9 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         </div>
       </div>
 
-      {/* Primary Car Photograph */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-12">
-        <div className="relative aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-xl border border-[#e2e5ea] dark:border-[#222631] group">
+      {/* Primary Car Photograph - Generous Viewport Presence */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="relative aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-2xl border border-slate-200 dark:border-[#222631] group">
           <img
             src={article.image}
             alt={article.title}
@@ -184,17 +210,17 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               (e.currentTarget as HTMLImageElement).src =
                 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1400&q=80';
             }}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700 ease-out"
           />
           <div className="absolute top-4 left-4 z-10">
-            <span className="inline-flex items-center gap-1.5 bg-[#0d0f12]/85 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded border border-white/10">
+            <span className="inline-flex items-center gap-1.5 bg-[#0b0e14]/90 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg border border-white/10 shadow-lg">
               <Car className="w-3.5 h-3.5 text-[#d90429]" /> Vehicle in Motion
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-2 px-1">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-3 px-1">
           <span>The Daily Overdrive Archive // {article.category}</span>
-          <span className="hidden sm:inline">Fig. 1.0 — Track & Vehicle Dynamics</span>
+          <span className="hidden sm:inline">Fig. 1.0 — Track & Dynamics Profile</span>
         </div>
       </div>
 
@@ -207,22 +233,22 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
         {/* Mechanical Fittings & Technical Hardware Spotlight Card */}
         {article.fittingsImage && (
-          <div className="my-14 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#15181e] border border-[#e2e5ea] dark:border-[#222631] shadow-lg">
-            <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-100 dark:border-[#222631]">
-              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-red-50 dark:bg-red-950/40 text-[#d90429]">
-                  <Wrench className="w-5 h-5" />
+          <div className="my-16 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-[#121620] border border-slate-200 dark:border-[#222631] shadow-lg">
+            <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200 dark:border-[#1e2433]">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-red-500/10 dark:bg-red-500/20 text-[#d90429] border border-red-500/20">
+                  <Wrench className="w-5 h-5 stroke-[2.2]" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                     Mechanical Fittings & Hardware Spotlight
                   </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     Critical engineering tolerance & component teardown
                   </span>
                 </div>
               </div>
-              <span className="hidden sm:inline-block text-[10px] uppercase font-bold text-slate-400 tracking-widest">
+              <span className="hidden sm:inline-block text-[10px] uppercase font-bold text-[#d90429] tracking-widest bg-red-500/10 px-2.5 py-1 rounded">
                 Fig. 2.0 Hardware
               </span>
             </div>
@@ -237,42 +263,42 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                     type: 'fitting',
                   })
                 }
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-900 cursor-pointer group"
+                className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-900 cursor-pointer group border border-slate-200 dark:border-[#222631]"
               >
                 <img
                   src={article.fittingsImage}
                   alt="Mechanical fitting component"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src =
-                      'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80';
+                      'https://images.unsplash.com/photo-1600793575654-910699b5e4d4?auto=format&fit=crop&w=1200&q=80';
                   }}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider bg-black/60 px-3 py-1.5 rounded-lg backdrop-blur-sm">
-                    <ZoomIn className="w-4 h-4" /> Inspect Fitting
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider bg-black/75 px-3.5 py-2 rounded-lg backdrop-blur-sm border border-white/20">
+                    <ZoomIn className="w-4 h-4 text-[#d90429]" /> Inspect Fitting
                   </span>
                 </div>
                 <div className="absolute bottom-3 left-3">
-                  <span className="inline-flex items-center gap-1 bg-[#d90429] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded shadow">
+                  <span className="inline-flex items-center gap-1.5 bg-[#d90429] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-md">
                     <Wrench className="w-3 h-3" /> Technical Fitting
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                <p className="font-semibold text-slate-900 dark:text-white">
-                  Precision Engineering & Component Assembly
+              <div className="space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="font-bold text-slate-900 dark:text-white text-base">
+                  Precision Metallurgy & High-Tolerance Assembly
                 </p>
                 <p>
-                  Every high-performance vehicle requires specialized fittings engineered to withstand thermal cycling, extreme hydraulic pressures, and vibration loads. From billet aluminum brackets to braided aerospace lines, tolerances are measured in hundredths of a millimeter.
+                  High-performance vehicles demand specialized mechanical fittings calibrated to endure extreme vibrational frequencies, thermal cycles exceeding 800°C, and sustained hydraulic pressure.
                 </p>
-                <div className="pt-2 flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-semibold">
-                  <span className="inline-flex items-center gap-1">
+                <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-semibold">
+                  <span className="inline-flex items-center gap-1 bg-white dark:bg-[#0b0e14] px-2.5 py-1 rounded-md border border-slate-200 dark:border-[#222631]">
                     <Check className="w-3.5 h-3.5 text-emerald-500" /> Track-vetted
                   </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" /> Billet metallurgy
+                  <span className="inline-flex items-center gap-1 bg-white dark:bg-[#0b0e14] px-2.5 py-1 rounded-md border border-slate-200 dark:border-[#222631]">
+                    <Check className="w-3.5 h-3.5 text-emerald-500" /> Billet alloy
                   </span>
                 </div>
               </div>
@@ -282,24 +308,24 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
         {/* Photos & Mechanical Fittings Gallery Section */}
         {article.gallery.length > 0 && (
-          <div className="mt-14 pt-10 border-t border-[#e2e5ea] dark:border-[#222631]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="mt-16 pt-12 border-t border-slate-200 dark:border-[#222631]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div>
                 <h3 className="text-xl sm:text-2xl font-black uppercase italic tracking-tight text-slate-900 dark:text-white">
                   Photography & <span className="text-[#d90429]">Fittings Gallery</span>
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   High-resolution car dynamics and detailed mechanical hardware photography.
                 </p>
               </div>
 
               {/* Gallery Filter Tabs */}
-              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-[#15181e] p-1 rounded-xl border border-[#e2e5ea] dark:border-[#222631] text-xs">
+              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-[#121620] p-1 rounded-xl border border-slate-200 dark:border-[#222631] text-xs">
                 <button
                   onClick={() => setActiveMediaFilter('all')}
                   className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                     activeMediaFilter === 'all'
-                      ? 'bg-[#d90429] text-white shadow'
+                      ? 'bg-[#d90429] text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
@@ -309,7 +335,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   onClick={() => setActiveMediaFilter('car')}
                   className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                     activeMediaFilter === 'car'
-                      ? 'bg-[#d90429] text-white shadow'
+                      ? 'bg-[#d90429] text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
@@ -319,7 +345,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   onClick={() => setActiveMediaFilter('fitting')}
                   className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                     activeMediaFilter === 'fitting'
-                      ? 'bg-[#d90429] text-white shadow'
+                      ? 'bg-[#d90429] text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
@@ -329,12 +355,12 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </div>
 
             {/* Gallery Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredGallery.map((photo, index) => (
                 <div
                   key={index}
                   onClick={() => setSelectedPhoto(photo)}
-                  className="group relative flex flex-col bg-white dark:bg-[#15181e] rounded-2xl overflow-hidden border border-[#e2e5ea] dark:border-[#222631] shadow-sm hover:shadow-lg transition-all cursor-pointer"
+                  className="group relative flex flex-col bg-white dark:bg-[#121620] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#222631] hover:border-slate-400 dark:hover:border-slate-700 shadow-sm hover:shadow-xl transition-all cursor-pointer"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
                     <img
@@ -343,15 +369,17 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       loading="lazy"
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src =
-                          'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80';
+                          photo.type === 'car'
+                            ? 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80'
+                            : 'https://images.unsplash.com/photo-1600793575654-910699b5e4d4?auto=format&fit=crop&w=1200&q=80';
                       }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3">
                       <span
-                        className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow ${
+                        className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-md ${
                           photo.type === 'car'
-                            ? 'bg-[#0d0f12]/85 text-white'
+                            ? 'bg-[#0b0e14]/90 text-white border border-white/10'
                             : 'bg-[#d90429] text-white'
                         }`}
                       >
@@ -368,14 +396,14 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                     </div>
 
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                      <span className="p-2 rounded-full bg-black/60 backdrop-blur-sm">
-                        <ZoomIn className="w-4 h-4" />
+                      <span className="p-2.5 rounded-full bg-black/75 backdrop-blur-sm border border-white/20">
+                        <ZoomIn className="w-4 h-4 text-[#d90429]" />
                       </span>
                     </div>
                   </div>
 
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1 group-hover:text-[#d90429] transition-colors">
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-[#d90429] transition-colors">
                       {photo.title}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
@@ -390,15 +418,15 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
         {/* Topic Tags */}
         {article.tags.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-[#e2e5ea] dark:border-[#222631]">
-            <div className="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
-              <Tag className="w-3.5 h-3.5" /> Filed under:
+          <div className="mt-14 pt-8 border-t border-slate-200 dark:border-[#222631]">
+            <div className="flex items-center gap-2 mb-3.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+              <Tag className="w-3.5 h-3.5 text-[#d90429]" /> Filed under:
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {article.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-[#15181e] border border-slate-200 dark:border-[#222631] text-slate-700 dark:text-slate-300"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-[#121620] border border-slate-200 dark:border-[#222631] text-slate-700 dark:text-slate-300"
                 >
                   #{tag}
                 </span>
@@ -408,35 +436,37 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         )}
 
         {/* Previous / Next Article Navigation */}
-        <div className="mt-12 pt-8 border-t border-[#e2e5ea] dark:border-[#222631] grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="mt-14 pt-10 border-t border-slate-200 dark:border-[#222631] grid grid-cols-1 sm:grid-cols-2 gap-5">
           {prevArticle ? (
-            <button
-              onClick={() => onNavigate(`/article/${prevArticle.slug}`)}
-              className="flex flex-col items-start p-5 rounded-2xl border border-[#e2e5ea] dark:border-[#222631] hover:border-[#d90429] bg-white dark:bg-[#15181e] text-left transition-all cursor-pointer group"
+            <a
+              href={`/article/${prevArticle.slug}`}
+              onClick={(e) => handleLinkClick(e, `/article/${prevArticle.slug}`)}
+              className="flex flex-col items-start p-6 rounded-2xl border border-slate-200 dark:border-[#222631] hover:border-[#d90429] dark:hover:border-[#d90429] bg-white dark:bg-[#121620] text-left transition-all cursor-pointer group shadow-sm"
             >
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1.5 group-hover:text-[#d90429]">
-                <ChevronLeft className="w-3.5 h-3.5" /> Previous Story
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2 group-hover:text-[#d90429] transition-colors">
+                <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" /> Previous Analysis
               </span>
               <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2">
                 {prevArticle.title}
               </span>
-            </button>
+            </a>
           ) : (
             <div />
           )}
 
           {nextArticle && (
-            <button
-              onClick={() => onNavigate(`/article/${nextArticle.slug}`)}
-              className="flex flex-col items-end p-5 rounded-2xl border border-[#e2e5ea] dark:border-[#222631] hover:border-[#d90429] bg-white dark:bg-[#15181e] text-right transition-all cursor-pointer group"
+            <a
+              href={`/article/${nextArticle.slug}`}
+              onClick={(e) => handleLinkClick(e, `/article/${nextArticle.slug}`)}
+              className="flex flex-col items-end p-6 rounded-2xl border border-slate-200 dark:border-[#222631] hover:border-[#d90429] dark:hover:border-[#d90429] bg-white dark:bg-[#121620] text-right transition-all cursor-pointer group shadow-sm"
             >
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1.5 group-hover:text-[#d90429]">
-                Next Story <ChevronRight className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2 group-hover:text-[#d90429] transition-colors">
+                Next Analysis <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </span>
               <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2">
                 {nextArticle.title}
               </span>
-            </button>
+            </a>
           )}
         </div>
       </div>
@@ -448,12 +478,12 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           role="dialog"
           aria-modal="true"
         >
-          <div className="relative max-w-4xl w-full bg-[#15181e] rounded-3xl overflow-hidden border border-[#222631] shadow-2xl flex flex-col">
+          <div className="relative max-w-4xl w-full bg-[#121620] rounded-3xl overflow-hidden border border-[#222631] shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-[#222631]">
               <div className="flex items-center gap-2">
                 <span
                   className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded ${
-                    selectedPhoto.type === 'car' ? 'bg-[#0d0f12] text-white' : 'bg-[#d90429] text-white'
+                    selectedPhoto.type === 'car' ? 'bg-[#0b0e14] text-white' : 'bg-[#d90429] text-white'
                   }`}
                 >
                   {selectedPhoto.type === 'car' ? 'Vehicle Photography' : 'Mechanical Fitting Hardware'}
@@ -477,7 +507,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               />
             </div>
 
-            <div className="p-4 bg-[#121316] text-xs text-slate-300">
+            <div className="p-4 bg-[#0b0e14] text-xs text-slate-300">
               <p>{selectedPhoto.caption}</p>
             </div>
           </div>

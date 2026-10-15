@@ -47,12 +47,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <ul className="space-y-2.5 text-xs font-semibold uppercase tracking-wider">
               {categories.map((cat) => (
                 <li key={cat}>
-                  <button
-                    onClick={() => onNavigate(`/category/${categoryToSlug(cat)}`)}
+                  <a
+                    href={`/category/${categoryToSlug(cat)}`}
+                    onClick={(e) => {
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                      e.preventDefault();
+                      onNavigate(`/category/${categoryToSlug(cat)}`);
+                    }}
                     className="text-slate-600 dark:text-slate-400 hover:text-[#d90429] dark:hover:text-[#d90429] transition-colors cursor-pointer"
                   >
                     {cat}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
